@@ -1,0 +1,14 @@
+extends "res://scripts/SigilEffect.gd"
+
+class_name SigilEffect_DoubleStrikeRandom
+
+func on_attack(attacker: Card, target: Card):
+    if attacker.has_attacked_twice:
+        return # Prevent infinite loops
+    var rand = randi() % 100
+    if rand < 50:
+        attacker.has_attacked_twice = true
+        yield(get_tree().create_timer(0.3), "timeout")
+        Game.log(attacker.card_name + " strikes again!")
+        yield(attacker.attack(target), "completed")
+        attacker.has_attacked_twice = false
